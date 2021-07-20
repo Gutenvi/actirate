@@ -106,11 +106,12 @@ title (['FFT of Filtered HBSS'])
 %% Extra Window (not done)
 
 w=500;
-f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
+%f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
+f_dominant_hs=[];
 r=length(ppg_shifted)-w;
 for i = 1:r
     window = zeros(1,length(ppg_shifted));
-    window(i:w) = 1 ;       
+    window(i:i+w-1) = 1 ;       
 windowed = filtered_ppg_sig.*window;
 %taking the mean considering the zero
 windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1)); 
@@ -120,7 +121,7 @@ windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1));
 hp_win_sig=filtfilt(b,a,windowed);
 
 % Lowpass filter
-[b,a]=butter(5,4/100/2,'low');
+[b,a]=butter(5,13/100/2,'low');
 x=filtfilt(b,a,hp_win_sig);                                           
 nfft = 2^nextpow2(length(x)); % next larger power of 2
 y = fft(x,nfft); % Fast Fourier Transform
