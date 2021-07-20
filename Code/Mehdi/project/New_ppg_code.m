@@ -23,10 +23,12 @@ ppg_time = linspace(0,length(ppg_shifted)/ppg_fs,length(ppg_shifted)) ;
 
 %% filtering
 % Highpass filter
+
 [b,a]=butter(5,0.5/100/2,'high');
 hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
+
 [b,a]=butter(5,13/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 % removing very low frequency noise that stoping signal to remain on zero line
@@ -50,6 +52,7 @@ wt = modwt(filtered_ppg_sig, 'sym4', 7);
 mra = modwtmra(wt, 'sym4');
 % Sum along selected multiresolution signals
 filtered_ppg_sig = sum(mra(levelForReconstruction,:),1);
+
 %% plotting signals over time
 figure
 plot (ppg_time,ppg)
@@ -85,14 +88,12 @@ x = filtered_ppg_sig;
 x = x - mean(x);                                            
 nfft = 2^nextpow2(length(x)); % next larger power of 2
 y = fft(x,nfft); % Fast Fourier Transform
-y = abs(y.^2); % raw power spectrum density
+y = abs(y); % raw power spectrum density
 y_hs = y(1:1+nfft/2); % half-spectrum
-[v,k] = max(y); % find maximum
+[v,k] = max(y_hs); % find maximum
 f_scale_hs = (0:nfft/2)* 100/nfft; % frequency scale
 f_dominant_hs = f_scale_hs(k);
-
 figure
-
 plot(f_scale_hs, y_hs)
 xlim([0 10]);
 grid('on')
@@ -115,6 +116,7 @@ windowed = filtered_ppg_sig.*window;
 windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1)); 
 %high pass 
 [b,a]=butter(5,0.7/100/2,'high');
+
 hp_win_sig=filtfilt(b,a,windowed);
 
 % Lowpass filter
@@ -122,7 +124,7 @@ hp_win_sig=filtfilt(b,a,windowed);
 x=filtfilt(b,a,hp_win_sig);                                           
 nfft = 2^nextpow2(length(x)); % next larger power of 2
 y = fft(x,nfft); % Fast Fourier Transform
-y = abs(y.^2); % raw power spectrum density
+y = abs(y); % raw power spectrum density
 y= y(1:1+nfft/2); % half-spectrum
 [v,k] = max(y); % find maximum
 f_scale_hs = (0:nfft/2)*100/nfft; % frequency scale
