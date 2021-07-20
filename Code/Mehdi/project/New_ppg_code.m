@@ -53,6 +53,7 @@ mra = modwtmra(wt, 'sym4');
 % Sum along selected multiresolution signals
 filtered_ppg_sig = sum(mra(levelForReconstruction,:),1);
 
+
 %% plotting signals over time
 figure
 plot (ppg_time,ppg)
@@ -87,8 +88,9 @@ subplot(121)
 x = filtered_ppg_sig;
 x = x - mean(x);                                            
 nfft = 2^nextpow2(length(x)); % next larger power of 2
-y = fft(x,nfft); % Fast Fourier Transform
-y = abs(y); % raw power spectrum density
+%y = fft(x,nfft); % Fast Fourier Transform
+y = fft(x); % Fast Fourier Transform
+y = abs(y.^2); % raw power spectrum density
 y_hs = y(1:1+nfft/2); % half-spectrum
 [v,k] = max(y_hs); % find maximum
 f_scale_hs = (0:nfft/2)* 100/nfft; % frequency scale
@@ -103,7 +105,7 @@ figure
 plot(f_scale_hs, y_hs)
 xlim([0 10]);
 title (['FFT of Filtered HBSS'])
-%% Extra Window (not done)
+%% Extra Window
 
 w=500;
 %f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
@@ -111,7 +113,7 @@ f_dominant_hs=[];
 r=length(ppg_shifted)-w;
 for i = 1:r
     window = zeros(1,length(ppg_shifted));
-    window(i:i+w-1) = 1 ;       
+    window(i:i+w) = 1 ;       
 windowed = filtered_ppg_sig.*window;
 %taking the mean considering the zero
 windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1)); 
@@ -122,16 +124,20 @@ hp_win_sig=filtfilt(b,a,windowed);
 
 % Lowpass filter
 [b,a]=butter(5,13/100/2,'low');
-x=filtfilt(b,a,hp_win_sig);                                           
+x=filtfilt(b,a,hp_win_sig);  
+
 nfft = 2^nextpow2(length(x)); % next larger power of 2
-y = fft(x,nfft); % Fast Fourier Transform
-y = abs(y); % raw power spectrum density
+%y = fft(x,nfft); % Fast Fourier Transform
+y = fft(x); % Fast Fourier Transform
+
+y = abs(y.^2); % raw power spectrum density
 y= y(1:1+nfft/2); % half-spectrum
 [v,k] = max(y); % find maximum
 f_scale_hs = (0:nfft/2)*100/nfft; % frequency scale
 f_dominant_hs(i) = f_scale_hs(k);
 
 end
+MaxiF=max(f_dominant_hs);
 %% d
 t=length(f_dominant_hs);
 
@@ -139,3 +145,4 @@ y1=f_dominant_hs*60;
 
 figure
 plot((1:t)/100,y1)
+
