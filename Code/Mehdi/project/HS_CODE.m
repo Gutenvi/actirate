@@ -80,7 +80,7 @@ figure
 %% FFT of filtered ecg signal
 l=length(filtered_ppg_sig);
 nfft=2^nextpow2(l);
-freq=ppg_fs/2*linspace(0,1,nfft/2+1)
+freq=ppg_fs/2*linspace(0,1,nfft/2+1);
 f_xn=abs(fft(filtered_ppg_sig,nfft));
 y = fft(filtered_ppg_sig,nfft); % Fast Fourier Transform
 y = abs(y.^2); % raw power spectrum density
@@ -152,6 +152,7 @@ for i = 1:(length(ppg)-w)
     window(i:i+w) = 1 ;       
 
 windowed = filtered_ppg_sig*window;
+length(windowed)
 [b,a]=butter(5,0.7/100/2,'high');
 hp_win_sig=filtfilt(b,a,windowed);
 
