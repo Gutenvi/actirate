@@ -1,11 +1,11 @@
-% This the code for first data recorded with the ECG on the belly without
-% any activity
+% This the code for first data recorded with the ECG on the Heart while
+% doing sport
 %% start with clean workspace
 close all;                  
 clear all;
 %% loading files and extracting ECG and PPG signals
 %importing the data into matlab
-[hdr, record] = edfread('18-17-40.EDF');
+[hdr, record] = edfread('18-23-00.EDF');
 ecg=flip(record(1,:));
 ecg=ecg - mean(ecg);
 %sampling frequency
@@ -53,10 +53,10 @@ hold on
 plot(ecg_time,filtered_ecg_sig)
 xlabel('ecg time')
 ylabel('Amplitude')
-title 'Raw ECG and Filtered ECG - Belly - No Activity'
+title 'Raw ECG and Filtered ECG - Heart - Sport'
 legend('Raw ECG','Filtered ECG')
-print(gcf,'Raw ECG and Filtered ECG - Belly - No Activity','-depsc');
-saveas(gcf,'Raw ECG and Filtered ECG - Belly - No Activity.png')
+print(gcf,'Raw ECG and Filtered ECG - Heart - Sport','-depsc');
+saveas(gcf,'Raw ECG and Filtered ECG - Heart - Sport.png')
 %% Periodogram
 [Pxx,Freq] = periodogram(ecg,flattopwin(length(ecg)),length(ecg),125);
 figure
@@ -65,8 +65,8 @@ subplot(121)
    grid on;
    xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
    title 'Periodogram of Raw ECG'
-print(gcf,'Periodogram of Raw ECG - Belly - No Activity','-depsc');
-saveas(gcf,'Periodogram of Raw ECG - Belly - No Activity.png')
+print(gcf,'Periodogram of Raw ECG - Heart - Sport','-depsc');
+saveas(gcf,'Periodogram of Raw ECG - Heart - Sport.png')
  [Pxx,Freq] = periodogram(filtered_ecg_sig,flattopwin(length(filtered_ecg_sig)),length(filtered_ecg_sig),125);
  subplot(122)
    plot(Freq,sqrt(Pxx))
@@ -74,8 +74,8 @@ saveas(gcf,'Periodogram of Raw ECG - Belly - No Activity.png')
    xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
    
    title (['Periodogram of Filtered ECG'])
-print(gcf,'Periodogram of Filtered ECG - Belly - No Activity','-depsc');
-saveas(gcf,'Periodogram of Filtered ECG - Belly - No Activity.png')
+print(gcf,'Periodogram of Filtered ECG - Heart - Sport','-depsc');
+saveas(gcf,'Periodogram of Filtered ECG - Heart - Sport.png')
 %% FFT of filtered HS signal and the maximum frequency
 x = filtered_ecg_sig;
 x = x - mean(x);                                            
@@ -92,12 +92,12 @@ plot(f_scale_hs, y_hs)
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
-print(gcf,'FFT of Filtered ECG - Belly - No Activity','-depsc');
-saveas(gcf,'FFT of Filtered ECG - Belly - No Activity.png')
+print(gcf,'FFT of Filtered ECG - Heart - Sport','-depsc');
+saveas(gcf,'FFT of Filtered ECG - Heart - Sport.png')
 title(['FFT of Filtered ECG-Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
 xline(f_dominant_hs,'--r','linewidth',3)
-print(gcf,'FFT of Filtered ECG - Belly - No Activity','-depsc');
-saveas(gcf,'FFT of Filtered ECG - Belly - No Activity.png')
+print(gcf,'FFT of Filtered ECG - Heart - Sport','-depsc');
+saveas(gcf,'FFT of Filtered ECG - Heart - Sport.png')
 figure
 plot(f_scale_hs, y_hs)
 xlim([0 10]);
@@ -139,5 +139,5 @@ t=length(f_dominant_hs);
 y1=f_dominant_hs*60;
 figure
 plot((1:t)/100,y1)
-print(gcf,'Windowed ECG - Belly - No Activity','-depsc');
-saveas(gcf,'Windowed ECG - Belly - No Activity - Belly - No Activity.png')
+print(gcf,'Windowed ECG - Heart - Sport','-depsc');
+saveas(gcf,'Windowed ECG - Heart - Sport - Heart - Sport.png')
