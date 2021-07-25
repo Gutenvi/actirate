@@ -29,7 +29,7 @@ hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
 
-[b,a]=butter(5,35/100/2,'low');
+[b,a]=butter(5,13/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 % removing very low frequency noise that stoping signal to remain on zero line
 % using wavelet transform
@@ -44,7 +44,7 @@ filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 %"false false" which were creating deviation in ecg signal,
 %and passing rest of the frequencies by saying "pass pass pass pass pass pass"
 %in this command i am saying that i want 6 frequencies out of 8
-levelForReconstruction = [true, true, true, true, true, true, true, false];
+levelForReconstruction = [true, true, true, true, true, true, false, false];
 %in this command i am commanding the MATLAB to break the signals into 7 parts
 % Perform the decomposition using modwt. 
 wt = modwt(filtered_ppg_sig, 'sym4', 7);
