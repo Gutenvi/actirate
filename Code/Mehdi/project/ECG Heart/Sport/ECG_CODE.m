@@ -13,6 +13,38 @@ ecg_fs=125;
 %time scaling
 %ecg_time=[1:length(ecg)]./ecg_fs;#
 ecg_time=linspace(0,length(ecg)/ecg_fs,length(ecg)) ;
+% This function filters the ECG signals to denoise
+% Input parameter 1: ecg (raw ECG data)
+% Input parameter 2: ecg_time (time points for the plot)
+
+% Output parameter: ecg_filt (filtered ECG)
+
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+fcomb = [[0.5 1.0], [45 48 52 55]]; % Assuming the data is acquired in Europe
+mags = [[0 1], [0 1]];
+dev = [[0.5 0.1], [0.1 0.5]];
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+%%%% Design kaiser window filter %%%%
+[n,Wn,beta,ftype] = kaiserord(fcomb,mags,dev,ecg_fs);
+hh = fir1(n,Wn,ftype,kaiser(n+1,beta),'noscale');
+%%%% Design kaiser window filter %%%%
+filtered_ecg_sig = filtfilt(hh, 1, ecg); % Apply the designed filter on the input data
+filtered_ecg_sig=filtered_ecg_sig(1:2875);
+%%%% PLOT %%%%%
+figure
+plot(ecg_time, ecg)
+grid
+title('Original Signal')
+hold on
+plot(ecg_time(1:2875), filtered_ecg_sig)
+grid
+title('Filtered Signal')
+title 'Raw ECG and Filtered ECG'
+legend('Raw ECG','Filtered ECG')
+hold off
+print(gcf,'Raw ECG and Filtered ECG - Heart - Sport','-depsc');
+saveas(gcf,'Raw ECG and Filtered ECG - Heart - Sport.png')
+%{
 %% filtering
 % Bandpass filter
 %[b,a]=butter(5,[1 120]/125/2,'bandpass');
@@ -57,6 +89,7 @@ title 'Raw ECG and Filtered ECG - Heart - Sport'
 legend('Raw ECG','Filtered ECG')
 print(gcf,'Raw ECG and Filtered ECG - Heart - Sport','-depsc');
 saveas(gcf,'Raw ECG and Filtered ECG - Heart - Sport.png')
+%}
 %% Periodogram
 [Pxx,Freq] = periodogram(ecg,flattopwin(length(ecg)),length(ecg),125);
 figure
@@ -84,8 +117,11 @@ nfft = 2^nextpow2(length(x)); % next larger power of 2
 y = fft(x); % Fast Fourier Transform
 y = abs(y.^2); % raw power spectrum density
 y_hs = y(1:1+nfft/2); % half-spectrum
+L=length(y_hs);
+y_hs = y_hs(18:L);
 [v,k] = max(y_hs); % find maximum
 f_scale_hs = (0:nfft/2)* 125/nfft; % frequency scale
+f_scale_hs = f_scale_hs(18:L);
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
@@ -104,12 +140,12 @@ xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
 
-w=500;
+w=1000;
 %f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
 f_dominant_hs=[];
-r=length(ecg)-w;
+r=length(filtered_ecg_sig)-w;
 for i = 1:r
-    window = zeros(1,length(ecg));
+    window = zeros(1,length(filtered_ecg_sig));
     window(i:i+w) = 1 ;       
 windowed = filtered_ecg_sig.*window;
 %taking the mean considering the zero

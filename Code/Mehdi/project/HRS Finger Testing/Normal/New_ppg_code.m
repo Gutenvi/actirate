@@ -3,8 +3,8 @@ close all;
 clear all;
 clc
 %% loading files and extracting ECG and PPG signals
-%r=readtable('0707-1630-A.csv');
-r=readtable('0507-1616-S-da.csv');
+r=readtable('0707-1630-A.csv');
+%r=readtable('0507-1616-S-da.csv');
 ppg_shifted=table2array(r(7:end,2));
 
 %ppg_shifted=flip(vec)';
@@ -24,12 +24,12 @@ ppg_time = linspace(0,length(ppg_shifted)/ppg_fs,length(ppg_shifted)) ;
 %% filtering
 % Highpass filter
 
-[b,a]=butter(5,0.5/100/2,'high');
+[b,a]=butter(5,0.4/100/2,'high');
 hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
 
-[b,a]=butter(5,13/100/2,'low');
+[b,a]=butter(5,5/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 % removing very low frequency noise that stoping signal to remain on zero line
 % using wavelet transform
@@ -64,6 +64,20 @@ xlabel('time')
 ylabel('Amplitude')
 title (['Raw and Filtered HBS Signal'])
 legend('Raw HBSS','Filtered HBSS')
+x = ppg;
+x = x - mean(x);                                            
+nfft = 2^nextpow2(length(x)); % next larger power of 2
+%y = fft(x,nfft); % Fast Fourier Transform
+y = fft(x); % Fast Fourier Transform
+y = abs(y.^2); % raw power spectrum density
+y_hs = y(1:1+nfft/2); % half-spectrum
+[v,k] = max(y_hs); % find maximum
+f_scale_hs = (0:nfft/2)* 100/nfft; % frequency scale
+f_dominant_hs = f_scale_hs(k);
+figure
+plot(f_scale_hs, y_hs)
+xlim([0 10]);
+title (['FFT of Filtered HBSS'])
 
 %% Periodogram
 

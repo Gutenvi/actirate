@@ -6,6 +6,7 @@ clear all;
 %% loading files and extracting ECG and PPG signals
 %importing the data into matlab
 [hdr, record] = edfread('18-17-40.EDF');
+%record=record(1,1:4000);
 ecg=flip(record(1,:));
 ecg=ecg - mean(ecg);
 %sampling frequency
@@ -13,6 +14,38 @@ ecg_fs=125;
 %time scaling
 %ecg_time=[1:length(ecg)]./ecg_fs;#
 ecg_time=linspace(0,length(ecg)/ecg_fs,length(ecg)) ;
+% This function filters the ECG signals to denoise
+% Input parameter 1: ecg (raw ECG data)
+% Input parameter 2: ecg_time (time points for the plot)
+
+% Output parameter: ecg_filt (filtered ECG)
+
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+fcomb = [[0.5 1.0], [45 48 52 55]]; % Assuming the data is acquired in Europe
+mags = [[0 1], [0 1]];
+dev = [[0.5 0.1], [0.1 0.5]];
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+%%%% Design kaiser window filter %%%%
+[n,Wn,beta,ftype] = kaiserord(fcomb,mags,dev,ecg_fs);
+hh = fir1(n,Wn,ftype,kaiser(n+1,beta),'noscale');
+%%%% Design kaiser window filter %%%%
+filtered_ecg_sig = filtfilt(hh, 1, ecg); % Apply the designed filter on the input data
+filtered_ecg_sig=filtered_ecg_sig(1:6250); %first 50 seconds
+%%%% PLOT %%%%%
+figure
+plot(ecg_time, ecg)
+grid
+title('Original Signal')
+hold on
+plot(ecg_time(1:6250), filtered_ecg_sig)%scalig x axis
+grid
+title('Filtered Signal')
+title 'Raw ECG and Filtered ECG'
+legend('Raw ECG','Filtered ECG')
+hold off
+print(gcf,'Raw ECG and Filtered ECG - Belly - No Activity','-depsc');
+saveas(gcf,'Raw ECG and Filtered ECG - Belly - No Activity.png')
+%{
 %% filtering
 % Bandpass filter
 %[b,a]=butter(5,[1 120]/125/2,'bandpass');
@@ -57,6 +90,7 @@ title 'Raw ECG and Filtered ECG - Belly - No Activity'
 legend('Raw ECG','Filtered ECG')
 print(gcf,'Raw ECG and Filtered ECG - Belly - No Activity','-depsc');
 saveas(gcf,'Raw ECG and Filtered ECG - Belly - No Activity.png')
+%}
 %% Periodogram
 [Pxx,Freq] = periodogram(ecg,flattopwin(length(ecg)),length(ecg),125);
 figure
@@ -103,13 +137,13 @@ plot(f_scale_hs, y_hs)
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
-
-w=500;
+%change w from 500 to 2000
+w=2000;
 %f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
 f_dominant_hs=[];
-r=length(ecg)-w;
+r=length(filtered_ecg_sig)-w;
 for i = 1:r
-    window = zeros(1,length(ecg));
+    window = zeros(1,length(filtered_ecg_sig));
     window(i:i+w) = 1 ;       
 windowed = filtered_ecg_sig.*window;
 %taking the mean considering the zero
@@ -120,13 +154,12 @@ windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1));
 hp_win_sig=filtfilt(b,a,windowed);
 
 % Lowpass filter
-[b,a]=butter(5,120/125/2,'low');
+[b,a]=butter(5,8/125/2,'low');
 x=filtfilt(b,a,hp_win_sig);  
 
 nfft = 2^nextpow2(length(x)); % next larger power of 2
 %y = fft(x,nfft); % Fast Fourier Transform
 y = fft(x); % Fast Fourier Transform
-
 y = abs(y.^2); % raw power spectrum density
 y= y(1:1+nfft/2); % half-spectrum
 [v,k] = max(y); % find maximum
@@ -136,7 +169,7 @@ f_dominant_hs(i) = f_scale_hs(k);
 end
 MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
-y1=f_dominant_hs*60;
+y1=f_dominant_hs; %delete multiplication
 figure
 plot((1:t)/100,y1)
 print(gcf,'Windowed ECG - Belly - No Activity','-depsc');

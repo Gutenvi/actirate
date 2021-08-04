@@ -1,6 +1,6 @@
 % This the code for first data recorded with the ECG 
 %% start with clean workspace
-close all;                  
+close all;
 clear all;
 %% loading files and extracting ECG and PPG signals
 %importing the data into matlab
@@ -12,6 +12,37 @@ ecg_fs=125;
 %time scaling
 %ecg_time=[1:length(ecg)]./ecg_fs;#
 ecg_time=linspace(0,length(ecg)/ecg_fs,length(ecg)) ;
+% This function filters the ECG signals to denoise
+% Input parameter 1: ecg (raw ECG data)
+% Input parameter 2: ecg_time (time points for the plot)
+
+% Output parameter: ecg_filt (filtered ECG)
+
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+fcomb = [[0.5 1.0], [45 48 52 55]]; % Assuming the data is acquired in Europe
+mags = [[0 1], [0 1]];
+dev = [[0.5 0.1], [0.1 0.5]];
+%%%%% Filter Design Parameters Defined for ECG %%%%%
+%%%% Design kaiser window filter %%%%
+[n,Wn,beta,ftype] = kaiserord(fcomb,mags,dev,ecg_fs);
+hh = fir1(n,Wn,ftype,kaiser(n+1,beta),'noscale');
+%%%% Design kaiser window filter %%%%
+filtered_ecg_sig = filtfilt(hh, 1, ecg); % Apply the designed filter on the input data
+%%%% PLOT %%%%%
+figure
+plot(ecg_time, ecg)
+grid
+title('Original Signal')
+hold on
+plot(ecg_time, filtered_ecg_sig)
+grid
+title('Filtered Signal')
+title 'Raw ECG and Filtered ECG'
+legend('Raw ECG','Filtered ECG')
+hold off
+print(gcf,'Raw ECG and Filtered ECG - 1.test - No Activity','-depsc');
+saveas(gcf,'Raw ECG and Filtered ECG - 1.test - No Activity.png')
+%{
 %% filtering
 % Bandpass filter
 %[b,a]=butter(5,[1 120]/125/2,'bandpass');
@@ -54,6 +85,7 @@ xlabel('ecg_time')
 ylabel('Amplitude')
 title 'Raw ECG and Filtered ECG'
 legend('Raw ECG','Filtered ECG')
+%}
 %% Periodogram
 [Pxx,Freq] = periodogram(ecg,flattopwin(length(ecg)),length(ecg),125);
 figure
@@ -62,13 +94,17 @@ subplot(121)
    grid on;
    xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
    title 'Periodogram of Raw ECG'
+print(gcf,'Periodogram of Raw ECG - 1.test - No Activity','-depsc');
+saveas(gcf,'Periodogram of Raw ECG - 1.test - No Activity.png')
 
  [Pxx,Freq] = periodogram(filtered_ecg_sig,flattopwin(length(filtered_ecg_sig)),length(filtered_ecg_sig),125);
  subplot(122)
    plot(Freq,sqrt(Pxx))
    grid on;
    xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
-   
+   print(gcf,'Periodogram of Filtered ECG - 1.test - No Activity','-depsc');
+saveas(gcf,'Periodogram of Filtered ECG - 1.test - No Activity.png')
+
    title (['Periodogram of Filtered ECG'])
 %% FFT of filtered HS signal and the maximum frequency
 x = filtered_ecg_sig;
@@ -86,13 +122,15 @@ plot(f_scale_hs, y_hs)
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
+print(gcf,'FFT of Filtered ECG - 1.test - No Activity','-depsc');
+saveas(gcf,'FFT of Filtered ECG - 1.Test - No Activity.png')
 xline(f_dominant_hs,'--r','linewidth',3)
+print(gcf,'FFT of Filtered ECG - 1.test - No Activity','-depsc');
+saveas(gcf,'FFT of Filtered ECG - 1.Test - No Activity.png')
 figure
 plot(f_scale_hs, y_hs)
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
-
-
 
 %% Windowing
 
@@ -131,3 +169,5 @@ t=length(f_dominant_hs);
 y1=f_dominant_hs*60;
 figure
 plot((1:t)/100,y1)
+print(gcf,'Windowed ECG - 1.Test - No Activity','-depsc');
+saveas(gcf,'Windowed ECG - 1.Test - No Activity - Heart - No Activity.png')

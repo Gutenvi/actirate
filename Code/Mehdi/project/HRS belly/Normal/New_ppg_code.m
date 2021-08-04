@@ -24,13 +24,14 @@ ppg_time = linspace(0,length(ppg_shifted)/ppg_fs,length(ppg_shifted)) ;
 %% filtering
 % Highpass filter
 
-[b,a]=butter(5,0.5/100/2,'high');
+[b,a]=butter(5,0.4/100/2,'high');
 hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
-
-[b,a]=butter(5,13/100/2,'low');
+%[b,a] = butter(5,[0.4 5]/50);
+[b,a]=butter(5,5/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
+
 % removing very low frequency noise that stoping signal to remain on zero line
 % using wavelet transform
 
@@ -47,7 +48,7 @@ filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 levelForReconstruction = [true, true, true, true, true, true, false, false];
 %in this command i am commanding the MATLAB to break the signals into 7 parts
 % Perform the decomposition using modwt. 
-wt = modwt(filtered_ppg_sig, 'sym4', 7);
+wt = modwt(filtered_ppg_sig, 'sym4', 6);
 % Construct MRA matrix using modwtmra
 mra = modwtmra(wt, 'sym4');
 % Sum along selected multiresolution signals
@@ -89,7 +90,7 @@ subplot(121)
 print(gcf,'Periodogram of Filtered HRS - Belly - Normal','-depsc');
 saveas(gcf,'Periodogram of Filtered HRS - Belly - Normal.png')
 %% FFT of filtered HS signal and the maximum frequency
-x = filtered_ppg_sig;
+x = ppg;
 x = x - mean(x);                                            
 nfft = 2^nextpow2(length(x)); % next larger power of 2
 %y = fft(x,nfft); % Fast Fourier Transform

@@ -29,7 +29,7 @@ hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
 
-[b,a]=butter(5,13/100/2,'low');
+[b,a]=butter(5,4/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 % removing very low frequency noise that stoping signal to remain on zero line
 % using wavelet transform

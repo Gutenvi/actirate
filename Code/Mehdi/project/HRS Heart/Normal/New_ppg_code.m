@@ -25,12 +25,12 @@ ppg_time = linspace(0,length(ppg_shifted)/ppg_fs,length(ppg_shifted)) ;
 %% filtering
 % Highpass filter
 
-[b,a]=butter(5,0.5/100/2,'high');
+[b,a]=butter(5,0.4/100/2,'high');
 hp_ppg_sig=filtfilt(b,a,ppg);
 
 % Lowpass filter
 
-[b,a]=butter(5,13/100/2,'low');
+[b,a]=butter(5,5/100/2,'low');
 filtered_ppg_sig=filtfilt(b,a,hp_ppg_sig);
 % removing very low frequency noise that stoping signal to remain on zero line
 % using wavelet transform
