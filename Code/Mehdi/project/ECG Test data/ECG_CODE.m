@@ -25,6 +25,7 @@ dev = [[0.5 0.1], [0.1 0.5]];
 %%%%% Filter Design Parameters Defined for ECG %%%%%
 %%%% Design kaiser window filter %%%%
 [n,Wn,beta,ftype] = kaiserord(fcomb,mags,dev,ecg_fs);
+
 hh = fir1(n,Wn,ftype,kaiser(n+1,beta),'noscale');
 %%%% Design kaiser window filter %%%%
 filtered_ecg_sig = filtfilt(hh, 1, ecg); % Apply the designed filter on the input data
@@ -134,7 +135,7 @@ title (['FFT of Filtered ECG'])
 
 %% Windowing
 
-w=500;
+w=1500;
 %f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
 f_dominant_hs=[];
 r=length(ecg)-w;
@@ -166,7 +167,7 @@ f_dominant_hs(i) = f_scale_hs(k);
 end
 MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
-y1=f_dominant_hs*60;
+y1=f_dominant_hs;
 figure
 plot((1:t)/100,y1)
 print(gcf,'Windowed ECG - 1.Test - No Activity','-depsc');

@@ -149,6 +149,7 @@ windowed = filtered_ecg_sig.*window;
 %taking the mean considering the zero
 windowed(i:w+1) = windowed(i:w+1) - mean(windowed(i:w+1)); 
 %high pass 
+
 [b,a]=butter(5,1/125/2,'high');
 
 hp_win_sig=filtfilt(b,a,windowed);

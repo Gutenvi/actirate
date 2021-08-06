@@ -140,8 +140,7 @@ plot(f_scale_hs, y_hs)
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
-
-w=1000;
+w=1500;
 %f_dominant_hs=zeros(1, length(ppg_shifted)-(w+0));
 f_dominant_hs=[];
 r=length(filtered_ecg_sig)-w;
