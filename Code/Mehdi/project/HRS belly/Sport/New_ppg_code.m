@@ -62,8 +62,8 @@ plot (ppg_time,ppg)
 hold on
 %subplot(212)
 plot(ppg_time,filtered_ppg_sig)
-xlabel('time')
-ylabel('Amplitude')
+xlabel('Time (s)');
+ylabel('Filtered value');
 title (['Raw and Filtered HBS Signal'])
 legend('Raw HBSS','Filtered HBSS')
 print(gcf,'Raw HRS and Filtered HRS - Belly - Sport','-depsc');
@@ -84,7 +84,7 @@ subplot(121)
    semilogy(Freq,sqrt(Pxx))
     
    grid on;
-   xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
+   xlabel('Frequency (Hz)'); ylabel('Power/Frequency (dB/Hz)');
   
    title 'Periodogram of Filtered PPG'
    
@@ -103,6 +103,8 @@ f_scale_hs = (0:nfft/2)* 100/nfft; % frequency scale
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -111,6 +113,8 @@ saveas(gcf,'FFT of Filtered HRS - Belly - Sport.png')
 xline(f_dominant_hs,'--r','linewidth',3)
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered HBSS'])
 %% Extra Window
@@ -153,5 +157,7 @@ y1=f_dominant_hs*60;
 
 figure
 plot((1:t)/100,y1)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed HRS - Belly - Sport','-depsc');
 saveas(gcf,'Windowed HRS - Belly - Sport - Belly - Sport.png')

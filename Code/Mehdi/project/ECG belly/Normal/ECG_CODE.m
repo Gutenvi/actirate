@@ -38,6 +38,8 @@ grid
 title('Original Signal')
 hold on
 plot(ecg_time(1:6250), filtered_ecg_sig)%scalig x axis
+xlabel('Time (s)');
+ylabel('filtered value');
 grid
 title('Filtered Signal')
 title 'Raw ECG and Filtered ECG'
@@ -123,6 +125,8 @@ f_scale_hs = (0:nfft/2)* 125/nfft; % frequency scale
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -172,6 +176,8 @@ MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
 y1=f_dominant_hs; %delete multiplication
 figure
-plot((1:t)/100,y1)
+plot((1:t)/100,y1*60)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed ECG - Belly - No Activity','-depsc');
 saveas(gcf,'Windowed ECG - Belly - No Activity - Belly - No Activity.png')

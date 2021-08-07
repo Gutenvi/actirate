@@ -33,6 +33,8 @@ filtered_ecg_sig=filtered_ecg_sig(1:2875);
 %%%% PLOT %%%%%
 figure
 plot(ecg_time, ecg)
+xlabel('Time (s)');
+ylabel('filtered value');
 grid
 title('Original Signal')
 hold on
@@ -126,6 +128,8 @@ f_dominant_hs = f_scale_hs(k);
 
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -137,6 +141,8 @@ print(gcf,'FFT of Filtered ECG - Belly - Sport','-depsc');
 saveas(gcf,'FFT of Filtered ECG - Belly - Sport.png')
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
@@ -175,6 +181,8 @@ MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
 y1=f_dominant_hs;
 figure
-plot((1:t)/100,y1)
+plot((1:t)/100,y1*60)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed ECG - Belly - Sport','-depsc');
 saveas(gcf,'Windowed ECG - Belly - Sport - Belly - Sport.png')

@@ -1,9 +1,9 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Creator: (MATLAB, The Mathworks, Inc. Version 9.7.0.1296695 \(R2019b\) Update 4. Operating System: Windows 10)
 %%Title: (./Raw ECG and Filtered ECG - 1.test - No Activity)
-%%CreationDate: 2021-08-05T18:09:21
+%%CreationDate: 2021-08-07T18:31:09
 %%Pages: (atend)
-%%BoundingBox:    24    19   385   304
+%%BoundingBox:    11     2   385   304
 %%LanguageLevel: 3
 %%EndComments
 %%BeginProlog
@@ -592,6 +592,17 @@ GS
 GR
 GR
 GS
+[0.5 0 0 0.5 217.25015 298.5] CT
+0.149 GC
+/Helvetica 22 F
+GS
+[1 0 0 1 0 0] CT
+-40.5 23 moveto 
+1 -1 scale
+(Time \(s\)) t 
+GR
+GR
+GS
 [0.5 0 0 0.5 0 0] CT
 0.149 GC
 2 setlinecap
@@ -919,6 +930,17 @@ GS
 -45 8 moveto 
 1 -1 scale
 (2500) t 
+GR
+GR
+GS
+[0 -0.5 0.5 0 21.5 151.99988] CT
+0.149 GC
+/Helvetica 22 F
+GS
+[1 0 0 1 0 0] CT
+-66.5 -5 moveto 
+1 -1 scale
+(Filtered value) t 
 GR
 GR
 GS

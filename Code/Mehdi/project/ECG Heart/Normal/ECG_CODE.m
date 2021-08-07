@@ -33,6 +33,8 @@ filtered_ecg_sig=filtered_ecg_sig(1:2625);
 %%%% PLOT %%%%%
 figure
 plot(ecg_time, ecg)
+xlabel('Time (s)');
+ylabel('filtered value');
 grid
 title('Original Signal')
 hold on
@@ -125,6 +127,8 @@ f_scale_hs = f_scale_hs(30:L);
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -136,6 +140,8 @@ print(gcf,'FFT of Filtered ECG - Heart - No Activity','-depsc');
 saveas(gcf,'FFT of Filtered ECG - Heart - No Activity.png')
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
@@ -175,5 +181,7 @@ t=length(f_dominant_hs);
 y1=f_dominant_hs*60;
 figure
 plot((1:t)/100,y1)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed ECG - Heart - No Activity','-depsc');
 saveas(gcf,'Windowed ECG - Heart - No Activity - Heart - No Activity.png')

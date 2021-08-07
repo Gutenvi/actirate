@@ -57,6 +57,8 @@ filtered_ppg_sig = sum(mra(levelForReconstruction,:),1);
 %% plotting signals over time
 figure
 plot (ppg_time,ppg)
+xlabel('Time (s)');
+ylabel('Filtered value');
 hold on
 %subplot(212)
 plot(ppg_time,filtered_ppg_sig)
@@ -64,6 +66,8 @@ xlabel('time')
 ylabel('Amplitude')
 title (['Raw and Filtered HBS Signal'])
 legend('Raw HBSS','Filtered HBSS')
+print(gcf,'Raw HRS and Filtered HRS - Finger - Sport','-depsc');
+saveas(gcf,'Raw HRS and Filtered HRS - Finger - Sport.png')
 
 %% Periodogram
 
@@ -84,6 +88,8 @@ subplot(121)
    xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
   
    title 'Periodogram of Filtered PPG'
+print(gcf,'Periodogram of Filtered HRS - Finger - Sport','-depsc');
+saveas(gcf,'Periodogram of Filtered HRS - Finger - Sport.png')
 %% FFT of filtered HS signal and the maximum frequency
 x = filtered_ppg_sig;
 x = x - mean(x);                                            
@@ -97,12 +103,18 @@ f_scale_hs = (0:nfft/2)* 100/nfft; % frequency scale
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
 xline(f_dominant_hs,'--r','linewidth',3)
+print(gcf,'FFT of Filtered HRS - Finger - Sport','-depsc');
+saveas(gcf,'FFT of Filtered HRS - Finger - Sport.png')
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered HBSS'])
 %% Extra Window
@@ -138,11 +150,15 @@ f_dominant_hs(i) = f_scale_hs(k);
 
 end
 MaxiF=max(f_dominant_hs);
-%% d
+
 t=length(f_dominant_hs);
 
 y1=f_dominant_hs*60;
 
 figure
 plot((1:t)/100,y1)
+xlabel('Time (s)');
+ylabel('BPMs');
+print(gcf,'Windowed HRS - Finger - Sport','-depsc');
+saveas(gcf,'Windowed HRS - Finger - Sport - Belly - Normal.png')
 

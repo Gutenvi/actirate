@@ -33,6 +33,8 @@ filtered_ecg_sig=filtered_ecg_sig(1:2875);
 %%%% PLOT %%%%%
 figure
 plot(ecg_time, ecg)
+xlabel('Time (s)');
+ylabel('Filtered value');
 grid
 title('Original Signal')
 hold on
@@ -104,7 +106,7 @@ saveas(gcf,'Periodogram of Raw ECG - Heart - Sport.png')
  subplot(122)
    plot(Freq,sqrt(Pxx))
    grid on;
-   xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
+   xlabel('Frequency (Hz)'); ylabel('Power/Frequency (dB/Hz)');
    
    title (['Periodogram of Filtered ECG'])
 print(gcf,'Periodogram of Filtered ECG - Heart - Sport','-depsc');
@@ -125,6 +127,8 @@ f_scale_hs = f_scale_hs(18:L);
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -136,6 +140,8 @@ print(gcf,'FFT of Filtered ECG - Heart - Sport','-depsc');
 saveas(gcf,'FFT of Filtered ECG - Heart - Sport.png')
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 %% Windowing
@@ -174,6 +180,8 @@ MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
 y1=f_dominant_hs;
 figure
-plot((1:t)/100,y1)
+plot((1:t)/100,y1*60)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed ECG - Heart - Sport','-depsc');
 saveas(gcf,'Windowed ECG - Heart - Sport - Heart - Sport.png')

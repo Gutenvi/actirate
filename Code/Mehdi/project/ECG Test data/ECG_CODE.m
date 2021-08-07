@@ -32,6 +32,8 @@ filtered_ecg_sig = filtfilt(hh, 1, ecg); % Apply the designed filter on the inpu
 %%%% PLOT %%%%%
 figure
 plot(ecg_time, ecg)
+xlabel('Time (s)');
+ylabel('Filtered value');
 grid
 title('Original Signal')
 hold on
@@ -93,7 +95,7 @@ figure
 subplot(121)
    plot(Freq,sqrt(Pxx))
    grid on;
-   xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
+   xlabel('Frequency (Hz)'); ylabel('Power/Frequency (dB/Hz)');
    title 'Periodogram of Raw ECG'
 print(gcf,'Periodogram of Raw ECG - 1.test - No Activity','-depsc');
 saveas(gcf,'Periodogram of Raw ECG - 1.test - No Activity.png')
@@ -102,7 +104,7 @@ saveas(gcf,'Periodogram of Raw ECG - 1.test - No Activity.png')
  subplot(122)
    plot(Freq,sqrt(Pxx))
    grid on;
-   xlabel('frequency (Hz)'); ylabel('power/frequency (dB/Hz)');
+   xlabel('Frequency (Hz)'); ylabel('Power/Frequency (dB/Hz)');
    print(gcf,'Periodogram of Filtered ECG - 1.test - No Activity','-depsc');
 saveas(gcf,'Periodogram of Filtered ECG - 1.test - No Activity.png')
 
@@ -120,6 +122,8 @@ f_scale_hs = (0:nfft/2)* 125/nfft; % frequency scale
 f_dominant_hs = f_scale_hs(k);
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 grid('on')
 title(['Dominant Frequency ', num2str(f_dominant_hs), ' Hz'])
@@ -130,6 +134,8 @@ print(gcf,'FFT of Filtered ECG - 1.test - No Activity','-depsc');
 saveas(gcf,'FFT of Filtered ECG - 1.Test - No Activity.png')
 figure
 plot(f_scale_hs, y_hs)
+xlabel('Frequency (Hz)');
+ylabel('Linear Spectrum(V RMS)');
 xlim([0 10]);
 title (['FFT of Filtered ECG'])
 
@@ -169,6 +175,8 @@ MaxiF=max(f_dominant_hs);
 t=length(f_dominant_hs);
 y1=f_dominant_hs;
 figure
-plot((1:t)/100,y1)
+plot((1:t)/100,y1*60)
+xlabel('Time (s)');
+ylabel('BPMs');
 print(gcf,'Windowed ECG - 1.Test - No Activity','-depsc');
 saveas(gcf,'Windowed ECG - 1.Test - No Activity - Heart - No Activity.png')
